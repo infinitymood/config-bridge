@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n-key="title">پل کانفیگ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --bg-gradient-start: #0f0f23;
+            --bg-gradient-end: #1e1b4b;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --error-color: #ef4444;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --card-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+            animation: float 20s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .title {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+
+        .language-switcher {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            z-index: 10;
+        }
+
+        .language-switcher:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .main-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .main-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.6);
+        }
+
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-textarea {
+            width: 100%;
+            min-height: 120px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 1rem;
+            line-height: 1.6;
+            resize: vertical;
+            transition: var(--transition);
+            direction: ltr;
+            text-align: left;
+        }
+
+        .input-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .input-textarea::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.8;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .custom-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .checkbox-input {
+            display: none;
+        }
+
+        .checkbox-input:checked + .custom-checkbox {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .checkbox-input:checked + .custom-checkbox::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .checkbox-label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .convert-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border: none;
+            border-radius: 16px;
+            padding: 1rem 2.5rem;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            margin-right: auto;
+            font-family: inherit;
+        }
+
+        .convert-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(99, 102, 241, 0.4);
+        }
+
+        .convert-btn:active {
+            transform: translateY(0);
+        }
+
+        .convert-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .convert-btn:hover::before {
+            left: 100%;
+        }
+
+        .output-section {
+            display: none;
+            flex-direction: column;
+            gap: 1rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .output-section.show {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .output-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .copy-btn {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            color: var(--success-color);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: inherit;
+        }
+
+        .copy-btn:hover {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: rgba(16, 185, 129, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .output-code {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-primary);
+            direction: ltr;
+            text-align: left;
+        }
+
+        .notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            color: var(--text-primary);
+            box-shadow: var(--card-shadow);
+            transform: translateX(400px);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 1000;
+            max-width: 400px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .notification.error {
+            border-color: rgba(239, 68, 68, 0.3);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .notification.success {
+            border-color: rgba(16, 185, 129, 0.3);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .notification.warning {
+            border-color: rgba(245, 158, 11, 0.3);
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .warning-box {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .warning-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--warning-color);
+        }
+
+        .warning-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        footer a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        [dir="ltr"] .language-switcher {
+            right: 2rem;
+            left: auto;
+        }
+
+        [dir="ltr"] .notification {
+            left: 2rem;
+            right: auto;
+            transform: translateX(-400px);
+        }
+
+        [dir="ltr"] .notification.show {
+            transform: translateX(0);
+        }
+
+        [dir="ltr"] .convert-btn {
+            margin-left: auto;
+            margin-right: 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .main-card {
+                padding: 2rem;
+            }
+
+            .title {
+                font-size: 2.5rem;
+            }
+
+            .language-switcher {
+                top: 1rem;
+                left: 1rem;
+            }
+
+            [dir="ltr"] .language-switcher {
+                right: 1rem;
+                left: auto;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .convert-btn {
+                margin: 0;
+            }
+
+            .notification {
+                right: 1rem;
+                left: 1rem;
+                max-width: none;
+                transform: translateY(-100px);
+            }
+
+            [dir="ltr"] .notification {
+                left: 1rem;
+                right: 1rem;
+            }
+
+            .notification.show {
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 2rem;
+            }
+
+            .main-card {
+                padding: 1.5rem;
+            }
+
+            .input-textarea {
+                min-height: 100px;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="language-switcher" onclick="toggleLanguage()">
+            <span>🌐</span>
+            <span data-i18n-key="lang-switch">FA/EN</span>
+        </div>
+
+        <header>
+            <h1 class="title" data-i18n-key="title">پل کانفیگ</h1>
+            <p class="subtitle" data-i18n-key="subtitle">مبدل جامع تمام پروتکل‌های V2Ray به Sing-Box</p>
+        </header>
+
+        <div class="warning-box">
+            <div class="warning-title" data-i18n-key="warning-title">⚠️ هشدار مهم</div>
+            <div class="warning-text" data-i18n-key="warning-text">کدهای تولید شده برای نسخه 1.12.0 هسته Sing-Box طراحی شده‌اند. ممکن است syntax نسخه‌های دیگر هسته متفاوت باشد و کد با سایر هسته‌ها به مشکل برخورد کرده و کار نکند.</div>
+        </div>
+
+        <main class="main-card">
+            <div class="input-section">
+                <div class="input-group">
+                    <textarea 
+                        id="configInput" 
+                        class="input-textarea"
+                        data-i18n-placeholder="input-placeholder"
+                        placeholder="لینک کانفیگ V2Ray را اینجا جای‌گذاری کنید..."
+                    ></textarea>
+                </div>
+                
+                <div class="controls">
+                    <label class="checkbox-group">
+                        <input type="checkbox" id="fragmentCheckbox" class="checkbox-input">
+                        <div class="custom-checkbox"></div>
+                        <span class="checkbox-label" data-i18n-key="fragment-label">فعال‌سازی Fragment (tlshello)</span>
+                    </label>
+
+                    <div class="input-group" style="flex: 1; min-width: 200px;">
+                         <label for="listenPortInput" class="checkbox-label" data-i18n-key="port-label" style="margin-bottom: 0.5rem; display: block;">پورت ورودی (Local Port)</label>
+                         <input 
+                            type="number" 
+                            id="listenPortInput" 
+                            class="input-textarea" 
+                            data-i18n-placeholder="port-placeholder"
+                            placeholder="2080"
+                            style="min-height: auto; padding: 1rem;"
+                         >
+                         <p data-i18n-key="port-desc" style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">
+                            این پورتی است که برنامه‌های شما (مانند مرورگر) برای اتصال به sing-box از آن استفاده می‌کنند.
+                         </p>
+                    </div>
+                    
+                    <button class="convert-btn" onclick="convertConfig()" data-i18n-key="convert-btn">
+                        تبدیل کن
+                    </button>
+                </div>
+            </div>
+
+            <div id="outputSection" class="output-section">
+                <div class="output-header">
+                    <h3 class="output-title" data-i18n-key="output-title">کانفیگ Sing-Box</h3>
+                    <button class="copy-btn" onclick="copyOutput()">
+                        <span id="copyIcon">📋</span>
+                        <span data-i18n-key="copy-btn">کپی</span>
+                    </button>
+                </div>
+                <pre id="outputCode" class="output-code"></pre>
+            </div>
+        </main>
+
+        <footer>
+            <p data-i18n-key="footer">
+                © 2024 تمامی حقوق برای <a href="https://github.com/infinitymood/config-bridge" target="_blank">infinitymood</a> محفوظ است
+            </p>
+        </footer>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script>
+        const translations = {
+            fa: {
+                title: "پل کانفیگ",
+                subtitle: "مبدل جامع تمام پروتکل‌های V2Ray به Sing-Box",
+                "lang-switch": "FA/EN",
+                "input-placeholder": "لینک کانفیگ (VMess, VLESS, Trojan, Shadowsocks, SSR, Hysteria, TUIC, WireGuard) را اینجا جای‌گذاری کنید...",
+                "fragment-label": "فعال‌سازی Fragment (tlshello)",
+                "port-label": "پورت ورودی (Local Port)",
+                "port-placeholder": "2080",
+                "port-desc": "این پورتی است که برنامه‌های شما (مانند مرورگر) برای اتصال به sing-box از آن استفاده می‌کنند.",
+                "convert-btn": "تبدیل کن",
+                "output-title": "کانفیگ Sing-Box",
+                "copy-btn": "کپی",
+                "warning-title": "⚠️ هشدار مهم",
+                "warning-text": "کدهای تولید شده برای نسخه 1.12.0 هسته Sing-Box طراحی شده‌اند. ممکن است syntax نسخه‌های دیگر هسته متفاوت باشد و کد با سایر هسته‌ها به مشکل برخورد کرده و کار نکند.",
+                footer: "© 2024 تمامی حقوق برای <a href=\"https://github.com/infinitymood/config-bridge\" target=\"_blank\">infinitymood</a> محفوظ است",
+                "error-invalid": "لینک وارد شده معتبر نیست.",
+                "error-unsupported": "پروتکل پشتیبانی نمی‌شود.",
+                "error-incomplete": "اطلاعات کانفیگ ناقص است.",
+                "success-copied": "با موفقیت کپی شد!",
+                "success-converted": "تبدیل با موفقیت انجام شد!"
+            },
+            en: {
+                title: "Config Bridge",
+                subtitle: "Universal V2Ray Protocol to Sing-Box Converter",
+                "lang-switch": "EN/FA",
+                "input-placeholder": "Paste your config link here (VMess, VLESS, Trojan, Shadowsocks, SSR, Hysteria, TUIC, WireGuard)...",
+                "fragment-label": "Enable Fragment (tlshello)",
+                "port-label": "Local Listen Port",
+                "port-placeholder": "2080",
+                "port-desc": "This is the port your applications (like your browser) will use to connect to sing-box.",
+                "convert-btn": "Convert",
+                "output-title": "Sing-Box Config",
+                "copy-btn": "Copy",
+                "warning-title": "⚠️ Important Warning",
+                "warning-text": "Generated configs are designed for Sing-Box core version 1.12.0. Syntax may differ in other core versions and the code may not work with other cores.",
+                footer: "© 2024 All rights reserved to <a href=\"https://github.com/infinitymood/config-bridge\" target=\"_blank\">infinitymood</a>",
+                "error-invalid": "Invalid config link provided.",
+                "error-unsupported": "Protocol not supported.",
+                "error-incomplete": "Incomplete configuration data.",
+                "success-copied": "Successfully copied!",
+                "success-converted": "Successfully converted!"
+            }
+        };
+        let currentLang = typeof localStorage !== 'undefined' ? localStorage.getItem('language') || 'fa' : 'fa';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setLanguage(currentLang);
+        });
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            const html = document.documentElement;
+            
+            html.setAttribute('lang', lang);
+            html.setAttribute('dir', lang === 'fa' ? 'rtl' : 'ltr');
+            
+            const elements = document.querySelectorAll('[data-i18n-key]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n-key');
+                if (translations[lang] && translations[lang][key]) {
+                    if (element.tagName === 'INPUT' && element.type === 'text') {
+                        element.placeholder = translations[lang][key];
+                    } else if (element.tagName === 'TEXTAREA') {
+                        element.placeholder = translations[lang][key];
+                    } else {
+                        element.innerHTML = translations[lang][key];
+                    }
+                }
+            });
+            
+            const textarea = document.getElementById('configInput');
+            if (textarea) {
+                textarea.placeholder = translations[lang]['input-placeholder'];
+            }
+            
+            if (typeof localStorage !== 'undefined') {
+                localStorage.setItem('language', lang);
+            }
+        }
+
+        function toggleLanguage() {
+            const newLang = currentLang === 'fa' ? 'en' : 'fa';
+            setLanguage(newLang);
+        }
+
+        function base64UrlDecode(str) {
+            str = str.replace(/-/g, '+').replace(/_/g, '/');
+            while (str.length % 4) {
+                str += '=';
+            }
+            try {
+                return atob(str);
+            } catch (e) {
+                try {
+                    return decodeURIComponent(escape(atob(str)));
+                } catch (e2) {
+                    return '';
+                }
+            }
+        }
+
+        function parseUrlParams(url) {
+            const params = {};
+            try {
+                const urlObj = new URL(url);
+                for (const [key, value] of urlObj.searchParams.entries()) {
+                    params[key] = decodeURIComponent(value);
+                }
+            } catch (e) {
+            }
+            return params;
+        }
+
+        function convertV2RayToSingbox(link) {
+            try {
+                const cleanLink = link.trim();
+                const fragmentEnabled = document.getElementById('fragmentCheckbox').checked;
+
+                const listenPort = parseInt(document.getElementById('listenPortInput').value) || 2080;
+                
+                let singboxConfig = {
+                    log: {
+                        level: "info",
+                        timestamp: true
+                    },
+                    dns: {
+                        servers: [
+                            {
+                                type: "https",
+                                tag: "cloudflare",
+                                server: "1.1.1.1",
+                                path: "/dns-query"
+                            },
+                            {
+                                type: "local",
+                                tag: "local"
+                            }
+                        ],
+                        rules: [
+                            {
+                                domain_suffix: [".ir"],
+                                action: "route",
+                                server: "local"
+                            }
+                        ],
+                        final: "cloudflare",
+                        strategy: "prefer_ipv4",
+                        disable_cache: false,
+                        disable_expire: false
+                    },
+                    ntp: {
+                        enabled: false,
+                        server: "time.nist.gov",
+                        server_port: 123,
+                        interval: "30m"
+                    },
+                    inbounds: [
+                        {
+                            type: "mixed",
+                            tag: "mixed-in",
+                            listen: "127.0.0.1",
+                            listen_port: listenPort,
+                            set_system_proxy: true
+                        }
+                    ],
+                    outbounds: [],
+                    route: {
+                        rules: [
+                        { protocol: "dns", action: "hijack-dns" },
+                        { domain_suffix: [".blocked-example.com"], action: "reject" },
+                        { domain_suffix: [".ir"], action: "route", outbound: "direct" },
+                        { ip_cidr: ["224.0.0.0/3", "ff00::/8"], action: "reject", source_ip_cidr: ["224.0.0.0/3", "ff00::/8"] }
+                        ],
+                        default_domain_resolver: "cloudflare",
+                        final: "proxy",
+                        auto_detect_interface: true
+                    },
+                    experimental: {
+                        clash_api: {
+                            external_controller: "127.0.0.1:9090",
+                            secret: "",
+                            default_mode: "rule"
+                        },
+                        cache_file: {
+                            enabled: true,
+                            path: "clash.db",
+                            cache_id: "my_profile2"
+                        }
+                    }
+                };
+
+                let mainOutbound;
+
+                if (cleanLink.startsWith('vmess://')) {
+                    mainOutbound = parseVmess(cleanLink, fragmentEnabled);
+                } else if (cleanLink.startsWith('vless://')) {
+                    mainOutbound = parseVless(cleanLink, fragmentEnabled);
+                } else if (cleanLink.startsWith('trojan://')) {
+                    mainOutbound = parseTrojan(cleanLink, fragmentEnabled);
+                } else if (cleanLink.startsWith('ss://')) {
+                    mainOutbound = parseShadowsocks(cleanLink, fragmentEnabled);
+                } else if (cleanLink.startsWith('ssr://')) {
+                    mainOutbound = parseShadowsocksR(cleanLink, fragmentEnabled);
+                } else if (cleanLink.startsWith('hysteria://') || cleanLink.startsWith('hy://')) {
+                    mainOutbound = parseHysteria(cleanLink, fragmentEnabled);
+                } else if (cleanLink.startsWith('hysteria2://') || cleanLink.startsWith('hy2://')) {
+                    mainOutbound = parseHysteria2(cleanLink, fragmentEnabled);
+                } else if (cleanLink.startsWith('tuic://')) {
+                    mainOutbound = parseTuic(cleanLink, fragmentEnabled);
+                } else if (cleanLink.startsWith('wireguard://') || cleanLink.startsWith('wg://')) {
+                    mainOutbound = parseWireguard(cleanLink, fragmentEnabled);
+                } else {
+                    try {
+                        const decoded = atob(cleanLink);
+                        const config = JSON.parse(decoded);
+                        mainOutbound = parseVmessLegacy(config, fragmentEnabled);
+                    } catch (e) {
+                        throw new Error(translations[currentLang]['error-invalid']);
+                    }
+                }
+
+                if (mainOutbound) {
+                    mainOutbound.tag = mainOutbound.tag || "proxy";
+                    singboxConfig.outbounds.push(mainOutbound);
+                }
+
+                singboxConfig.outbounds.push({
+                    type: "direct",
+                    tag: "direct"
+                });
+
+                singboxConfig.outbounds.push({
+                    type: "selector",
+                    tag: "selector-fallback",
+                    outbounds: ["proxy", "direct"]
+                });
+
+
+                return JSON.stringify(singboxConfig, null, 2);
+                
+            } catch (error) {
+                if (error.message.includes('not supported') || error.message === translations[currentLang]['error-invalid']) {
+                    throw error;
+                } else {
+                    throw new Error(translations[currentLang]['error-invalid']);
+                }
+            }
+        }
+
+        function parseVmess(link, fragmentEnabled) {
+            const base64Part = link.replace('vmess://', '');
+            const decoded = atob(base64Part);
+            const config = JSON.parse(decoded);
+            return parseVmessLegacy(config, fragmentEnabled);
+        }
+
+        function parseVmessLegacy(config, fragmentEnabled) {
+            if (!config.add || !config.port || !config.id) {
+                throw new Error(translations[currentLang]['error-invalid']);
+            }
+
+            const outbound = {
+                type: "vmess",
+                tag: "proxy",
+                server: config.add,
+                server_port: parseInt(config.port) || 0,
+                uuid: config.id,
+                security: config.scy || "auto",
+                alter_id: parseInt(config.aid) || 0,
+                packet_encoding: "",
+                multiplex: {
+                    enabled: false
+                }
+            };
+
+            if (config.net) {
+                outbound.transport = buildTransport(config.net, config, fragmentEnabled);
+            }
+
+            if (config.tls && config.tls !== 'none' && config.tls !== '') {
+                outbound.tls = buildTls(config, fragmentEnabled);
+            }
+
+            if (fragmentEnabled) {
+                applyFragmentToOutbound(outbound);
+            }
+
+            return outbound;
+        }
+
+        function parseVless(link, fragmentEnabled) {
+            const sanitized = link.replace(/^vless:\/\//i, 'vless://');
+            const url = new URL(sanitized);
+            const params = parseUrlParams(sanitized);
+
+            const outbound = {
+                type: "vless",
+                tag: "proxy",
+                server: url.hostname,
+                server_port: parseInt(url.port) || 443,
+                uuid: url.username || params.uuid || '',
+                packet_encoding: params.packet_encoding || "xudp"
+            };
+
+            if (params.flow) {
+                outbound.flow = params.flow;
+            }
+
+            if (params.type) {
+                const cfg = {
+                    net: params.type,
+                    path: params.path,
+                    host: params.host || params.sni,
+                    serviceName: params.serviceName,
+                    mode: params.mode,
+                    security: params.headerType
+                };
+                outbound.transport = buildTransport(params.type, cfg, fragmentEnabled);
+            }
+
+            if (params.security) {
+                if (params.security === 'reality') {
+                    outbound.tls = buildReality(params, fragmentEnabled);
+                } else if (params.security === 'tls') {
+                    outbound.tls = buildTls(params, fragmentEnabled);
+                }
+            }
+
+            if (fragmentEnabled) {
+                applyFragmentToOutbound(outbound);
+            }
+
+            return outbound;
+        }
+
+        function parseTrojan(link, fragmentEnabled) {
+            const url = new URL(link);
+            const params = parseUrlParams(link);
+
+            const outbound = {
+                type: "trojan",
+                tag: "proxy",
+                server: url.hostname,
+                server_port: parseInt(url.port) || 443,
+                password: url.username || url.password || params.password || ''
+            };
+
+            if (params.type) {
+                const cfg = {
+                    net: params.type,
+                    path: params.path,
+                    host: params.host || params.sni,
+                    serviceName: params.serviceName,
+                    mode: params.mode
+                };
+                outbound.transport = buildTransport(params.type, cfg, fragmentEnabled);
+            }
+
+            if (!params.security || params.security !== 'none') {
+                outbound.tls = buildTls(params, fragmentEnabled);
+            }
+
+            if (fragmentEnabled) {
+                applyFragmentToOutbound(outbound);
+            }
+
+            return outbound;
+        }
+
+        function parseShadowsocks(link, fragmentEnabled) {
+            const url = new URL(link);
+            const params = parseUrlParams(link);
+
+            let method = url.username || '';
+            let password = url.password || '';
+
+            try {
+                const decoded = base64UrlDecode(url.username);
+                if (decoded && decoded.includes(':')) {
+                    const parts = decoded.split(':');
+                    method = parts[0];
+                    password = parts.slice(1).join(':');
+                }
+            } catch (e) {
+            }
+
+            const outbound = {
+                type: "shadowsocks",
+                tag: "proxy",
+                server: url.hostname,
+                server_port: parseInt(url.port) || 8388,
+                method: method || 'aes-128-gcm',
+                password: password || '',
+                udp_over_tcp: false
+            };
+
+            if (params.plugin) {
+                const pluginParts = params.plugin.split(';');
+                const pluginName = pluginParts[0];
+                
+                if (pluginName === 'v2ray-plugin' || pluginName === 'obfs-local') {
+                    const pluginOpts = {};
+                    pluginParts.slice(1).forEach(opt => {
+                        const [key, value] = opt.split('=');
+                        pluginOpts[key] = value;
+                    });
+                    
+                    if (pluginOpts.mode === 'websocket') {
+                        outbound.plugin = "v2ray-plugin";
+                        outbound.plugin_opts = {
+                            mode: "websocket",
+                            host: pluginOpts.host,
+                            path: pluginOpts.path,
+                            tls: pluginOpts.tls === 'true'
+                        };
+                    } else if (pluginOpts.obfs) {
+                        outbound.plugin = "obfs-local";
+                        outbound.plugin_opts = {
+                            mode: pluginOpts.obfs,
+                            host: pluginOpts['obfs-host']
+                        };
+                    }
+                }
+            }
+
+            if (fragmentEnabled) {
+                applyFragmentToOutbound(outbound);
+            }
+
+            return outbound;
+        }
+
+        function parseShadowsocksR(link, fragmentEnabled) {
+            const base64Part = link.replace('ssr://', '');
+            const decoded = base64UrlDecode(base64Part);
+            const parts = decoded.split(':');
+            
+            if (parts.length < 6) {
+                throw new Error(translations[currentLang]['error-invalid']);
+            }
+
+            const [server, port, protocol, method, obfs, passwordB64] = parts;
+            const password = base64UrlDecode(passwordB64.split('/')[0]);
+
+            const outbound = {
+                type: "shadowsocksr",
+                tag: "proxy",
+                server: server,
+                server_port: parseInt(port),
+                method: method,
+                password: password,
+                protocol: protocol,
+                protocol_param: "",
+                obfs: obfs,
+                obfs_param: ""
+            };
+
+            if (fragmentEnabled) {
+                applyFragmentToOutbound(outbound);
+            }
+
+            return outbound;
+        }
+
+        function parseHysteria(link, fragmentEnabled) {
+            const url = new URL(link.replace('hy://', 'hysteria://'));
+            const params = parseUrlParams(link);
+
+            const outbound = {
+                type: "hysteria",
+                tag: "proxy",
+                server: url.hostname,
+                server_port: parseInt(url.port) || 443,
+                up_mbps: parseInt(params.upmbps) || parseInt(params.up) || 10,
+                down_mbps: parseInt(params.downmbps) || parseInt(params.down) || 50,
+                obfs: params.obfsParam || params.obfs,
+                recv_window_conn: 15728640,
+                recv_window: 67108864,
+                disable_mtu_discovery: false
+            };
+
+            if (url.username || params.auth) {
+                outbound.auth_str = url.username || params.auth;
+            } else if (url.password || params.password) {
+                outbound.auth = url.password || params.password;
+            }
+
+            if (params.insecure !== 'true') {
+                outbound.tls = {
+                    enabled: true,
+                    server_name: params.peer || params.sni || url.hostname,
+                    alpn: params.alpn ? params.alpn.split(',') : ["h3"],
+                    insecure: params.insecure === 'true'
+                };
+            }
+
+            if (fragmentEnabled) {
+                applyFragmentToOutbound(outbound);
+            }
+
+            return outbound;
+        }
+
+        function parseHysteria2(link, fragmentEnabled) {
+            const url = new URL(link.replace('hy2://', 'hysteria2://'));
+            const params = parseUrlParams(link);
+
+            const outbound = {
+                type: "hysteria2",
+                tag: "proxy",
+                server: url.hostname,
+                server_port: parseInt(url.port) || 443,
+                password: url.username || params.auth || params.password,
+                up_mbps: parseInt(params.up) || 10,
+                down_mbps: parseInt(params.down) || 50,
+                obfs: {
+                    type: params.obfs || "salamander",
+                    password: params.obfs_password || ""
+                }
+            };
+
+            if (params.insecure !== 'true') {
+                outbound.tls = {
+                    enabled: true,
+                    server_name: params.sni || url.hostname,
+                    alpn: ["h3"],
+                    insecure: params.insecure === 'true'
+                };
+            }
+
+            if (fragmentEnabled) {
+                applyFragmentToOutbound(outbound);
+            }
+
+            return outbound;
+        }
+
+        function parseTuic(link, fragmentEnabled) {
+            const url = new URL(link);
+            const params = parseUrlParams(link);
+
+            const outbound = {
+                type: "tuic",
+                tag: "proxy",
+                server: url.hostname,
+                server_port: parseInt(url.port) || 443,
+                uuid: url.username,
+                password: url.password,
+                congestion_control: params.congestion_control || "cubic",
+                udp_relay_mode: params.udp_relay_mode || "native",
+                zero_rtt_handshake: false,
+                heartbeat: "10s"
+            };
+
+            if (params.insecure !== 'true') {
+                outbound.tls = {
+                    enabled: true,
+                    server_name: params.sni || url.hostname,
+                    alpn: params.alpn ? params.alpn.split(',') : ["h3"],
+                    insecure: params.insecure === 'true'
+                };
+            }
+
+            if (fragmentEnabled) {
+                applyFragmentToOutbound(outbound);
+            }
+
+            return outbound;
+        }
+
+        function parseWireguard(link, fragmentEnabled) {
+            const url = new URL(link.replace('wg://', 'wireguard://'));
+            const params = parseUrlParams(link);
+
+            const outbound = {
+                type: "wireguard",
+                tag: "proxy",
+                server: url.hostname,
+                server_port: parseInt(url.port) || 51820,
+                private_key: url.username || params.privatekey,
+                peer_public_key: params.publickey,
+                local_address: params.address ? params.address.split(',') : ["10.0.0.2/32"],
+                mtu: parseInt(params.mtu) || 1420,
+                workers: 4
+            };
+
+            if (params.reserved) {
+                outbound.reserved = params.reserved.split(',').map(x => parseInt(x));
+            }
+
+            if (params.preshared_key) {
+                outbound.pre_shared_key = params.preshared_key;
+            }
+
+            if (fragmentEnabled) {
+                applyFragmentToOutbound(outbound);
+            }
+
+            return outbound;
+        }
+
+        function buildTransport(type, config, fragmentEnabled) {
+            const transport = {};
+            
+            switch ((type || '').toLowerCase()) {
+                case 'tcp':
+                    transport.type = "tcp";
+                    if (config.type === 'http' || config.security === 'http') {
+                        transport.headers = {};
+                        if (config.host) {
+                            transport.headers.Host = config.host.split(',');
+                        }
+                        if (config.path) {
+                            transport.method = "GET";
+                            transport.path = config.path;
+                        }
+                    }
+                    break;
+                    
+                case 'ws':
+                case 'websocket':
+                    transport.type = "ws";
+                    if (config.path) {
+                        transport.path = config.path;
+                    }
+                    if (config.host) {
+                        transport.headers = { Host: config.host };
+                    }
+                    transport.max_early_data = 2048;
+                    transport.early_data_header_name = "Sec-WebSocket-Protocol";
+                    break;
+                    
+                case 'h2':
+                case 'http':
+                    transport.type = "http";
+                    if (config.path) {
+                        transport.path = config.path;
+                    }
+                    if (config.host) {
+                        transport.host = config.host.split(',');
+                    }
+                    transport.method = "GET";
+                    break;
+                    
+                case 'grpc':
+                    transport.type = "grpc";
+                    if (config.path || config.serviceName) {
+                        transport.service_name = config.path || config.serviceName;
+                    }
+                    transport.idle_timeout = "15s";
+                    transport.ping_timeout = "15s";
+                    transport.permit_without_stream = false;
+                    break;
+                    
+                case 'quic':
+                    transport.type = "quic";
+                    break;
+                    
+                case 'httpupgrade':
+                    transport.type = "httpupgrade";
+                    if (config.path) {
+                        transport.path = config.path;
+                    }
+                    if (config.host) {
+                        transport.host = config.host;
+                    }
+                    break;
+                    
+                default:
+                    transport.type = "tcp";
+            }
+            
+            return transport;
+        }
+
+        function buildTls(config, fragmentEnabled) {
+            const tls = { 
+                enabled: true,
+                disable_sni: false,
+                server_name: "",
+                insecure: false,
+                alpn: []
+            };
+            
+            if (config.sni || config.host) {
+                tls.server_name = config.sni || (config.host ? config.host.split(',')[0] : "");
+            }
+            
+            if (config.alpn) {
+                tls.alpn = config.alpn.split(',').map(s => s.trim());
+            } else {
+                tls.alpn = ["h2", "http/1.1"];
+            }
+            
+            if (config.fp || config.fingerprint || fragmentEnabled) {
+                tls.utls = {
+                    enabled: true,
+                    fingerprint: config.fp || config.fingerprint || "chrome"
+                };
+            }
+            
+            if (config.insecure === 'true' || config.allowInsecure === 'true') {
+                tls.insecure = true;
+            }
+            
+            if (config.cert) {
+                tls.certificate = config.cert;
+            }
+            
+            return tls;
+        }
+
+        function buildReality(params, fragmentEnabled) {
+            const tls = {
+                enabled: true,
+                server_name: params.sni || params.host || "",
+                insecure: params.insecure === 'true',
+                utls: {
+                    enabled: true,
+                    fingerprint: params.fp || "chrome"
+                }
+            };
+
+            tls.reality = {
+                enabled: true,
+                public_key: params.pbk || params.public_key || "",
+                short_id: params.sid || ""
+            };
+            
+            return tls;
+        }
+
+        function applyFragmentToOutbound(outbound) {
+            if (!outbound || typeof outbound !== 'object') return;
+
+            if (outbound.tls) {
+                if (!outbound.tls.utls) {
+                    outbound.tls.utls = {
+                        enabled: true,
+                        fingerprint: "chrome"
+                    };
+                }
+                outbound.tls.utls.fingerprint = outbound.tls.utls.fingerprint || "chrome";
+            }
+
+            if (!outbound.transport || outbound.transport.type === "tcp") {
+                if (!outbound.transport) {
+                    outbound.transport = { type: "tcp" };
+                }
+            }
+
+            if (outbound.type === "vmess") {
+                outbound.packet_encoding = outbound.packet_encoding || "packet";
+            } else if (outbound.type === "vless") {
+                outbound.packet_encoding = outbound.packet_encoding || "xudp";
+            }
+        }
+
+        function convertConfig() {
+            const input = document.getElementById('configInput').value.trim();
+            const outputSection = document.getElementById('outputSection');
+            const outputCode = document.getElementById('outputCode');
+
+            if (!input) {
+                showNotification(translations[currentLang]['error-invalid'], 'error');
+                return;
+            }
+
+            try {
+                const result = convertV2RayToSingbox(input);
+                outputCode.textContent = result;
+                outputSection.classList.add('show');
+                showNotification(translations[currentLang]['success-converted'], 'success');
+            } catch (error) {
+                showNotification(error.message, 'error');
+                outputSection.classList.remove('show');
+            }
+        }
+
+        function copyOutput() {
+            const outputCode = document.getElementById('outputCode');
+            const copyIcon = document.getElementById('copyIcon');
+            
+            navigator.clipboard.writeText(outputCode.textContent).then(() => {
+                copyIcon.textContent = '✅';
+                showNotification(translations[currentLang]['success-copied'], 'success');
+                
+                setTimeout(() => {
+                    copyIcon.textContent = '📋';
+                }, 2000);
+            }).catch(() => {
+                showNotification('خطا در کپی کردن', 'error');
+            });
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 4000);
+        }
+
+        document.getElementById('configInput').addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                convertConfig();
+            }
+        });
+    </script>
+</body>
+</html>
