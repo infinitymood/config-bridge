@@ -11,13 +11,6 @@ A modern, universal converter for all V2Ray-based protocols to the standard Sing
 
 ---
 
-### 📸 Preview
-
-![Screenshot of Config Bridge](https://user-images.githubusercontent.com/your-username/your-repo/assets/screenshot.png) 
-*A sleek, modern UI featuring a glassmorphism design for the best user experience.*
-
----
-
 ### 🚀 Features
 
 *   **Extensive Protocol Support:** Converts links for `VMess`, `VLESS`, `Trojan`, `Shadowsocks`, `SSR`, `Hysteria`, `TUIC`, and `WireGuard`.
